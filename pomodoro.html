@@ -34,22 +34,22 @@
     <!-- Google Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<!-- PWA Manifest -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#2563eb">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
 
-<!-- Service Worker Kaydı -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker Aktif:', reg.scope))
-        .catch((err) => console.log('Service Worker Hatası:', err));
-    });
-  }
-</script>
+    <!-- Service Worker Kaydı -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('Service Worker Aktif:', reg.scope))
+            .catch((err) => console.log('Service Worker Hatası:', err));
+        });
+      }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -77,24 +77,31 @@
                     </div>
                 </div>
 
-                <!-- Desktop Nav -->
-                <nav class="hidden md:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800/80">
-                    <a href="takvim.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
-                        <i class="fa-regular fa-calendar-check"></i> Takvim
-                    </a>
-                    <a href="deneme.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
-                        <i class="fa-solid fa-chart-line"></i> Deneme
-                    </a>
-                    <a href="hata_defteri.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
-                        <i class="fa-solid fa-book-bookmark"></i> Hata Defteri
-                    </a>
-                    <a href="pomodoro.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-brand-400 bg-brand-500/10 border border-brand-500/20">
-                        <i class="fa-solid fa-clock"></i> Pomodoro
-                    </a>
-                    <a href="ozet.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
-                        <i class="fa-solid fa-sliders"></i> İstatistik
-                    </a>
-                </nav>
+                <div class="flex items-center gap-3">
+                    <!-- Bildirim İzin Butonu -->
+                    <button id="notifBtn" onclick="requestNotificationPermission()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all">
+                        <i class="fa-solid fa-bell"></i> <span id="notifBtnText">Bildirimleri Aç</span>
+                    </button>
+
+                    <!-- Desktop Nav -->
+                    <nav class="hidden md:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800/80">
+                        <a href="takvim.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-regular fa-calendar-check"></i> Takvim
+                        </a>
+                        <a href="deneme.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-chart-line"></i> Deneme
+                        </a>
+                        <a href="hata_defteri.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-book-bookmark"></i> Hata Defteri
+                        </a>
+                        <a href="pomodoro.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-brand-400 bg-brand-500/10 border border-brand-500/20">
+                            <i class="fa-solid fa-clock"></i> Pomodoro
+                        </a>
+                        <a href="ozet.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                            <i class="fa-solid fa-sliders"></i> İstatistik
+                        </a>
+                    </nav>
+                </div>
             </div>
         </div>
 
@@ -200,9 +207,69 @@
         let isRunning = false;
         let completedPomodoros = parseInt(localStorage.getItem("aoo_pomodoro_count")) || 0;
 
+        // BİLDİRİM FONKSİYONLARI
+        function sendPWANotification(title, body, tag = 'general', url = '/pomodoro.html') {
+            if (Notification.permission === 'granted') {
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'SHOW_NOTIFICATION',
+                        title: title,
+                        body: body,
+                        tag: tag,
+                        url: url
+                    });
+                } else {
+                    new Notification(title, { body: body, icon: '/android-chrome-192x192.png' });
+                }
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                alert("Tarayıcınız bildirim özelliğini desteklemiyor.");
+                return;
+            }
+
+            Notification.requestPermission().then((permission) => {
+                updateNotifButtonUI();
+                if (permission === "granted") {
+                    sendPWANotification(
+                        "Başarı İstasyonu 🚀",
+                        "Bildirimler aktif edildi! Pomodoro seansların bittiğinde sana bildirim göndereceğiz.",
+                        "welcome-pomodoro"
+                    );
+                } else if (permission === "denied") {
+                    alert("Bildirim izni engellendi. Telefon/Tarayıcı ayarlarından izin verebilirsin.");
+                }
+            });
+        }
+
+        function updateNotifButtonUI() {
+            const btnText = document.getElementById("notifBtnText");
+            const btn = document.getElementById("notifBtn");
+            if (!btnText || !btn) return;
+
+            if (!("Notification" in window)) {
+                btnText.innerText = "Desteklenmiyor";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                btnText.innerText = "Bildirimler Açık";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold cursor-default";
+            } else if (Notification.permission === "denied") {
+                btnText.innerText = "Bildirim Kapalı";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-semibold cursor-pointer";
+            } else {
+                btnText.innerText = "Bildirimleri Aç";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all cursor-pointer";
+            }
+        }
+
         window.addEventListener("DOMContentLoaded", () => {
             updateDisplay();
             updateStatsUI();
+            updateNotifButtonUI();
         });
 
         function switchMode(mode) {
@@ -280,8 +347,25 @@
                         completedPomodoros++;
                         localStorage.setItem("aoo_pomodoro_count", completedPomodoros);
                         updateStatsUI();
+
+                        // PWA Bildirimi Tetikle
+                        sendPWANotification(
+                            "🍅 Pomodoro Seansı Tamamlandı!",
+                            `Harika bir odaklanma seansı tamamladın Ahmet Ensar! Toplam: ${completedPomodoros} Seans. Şimdi mola vakti!`,
+                            `pomodoro-complete-${Date.now()}`,
+                            '/pomodoro.html'
+                        );
+
                         alert("Tebrikler! Belirlediğin çalışma seansını tamamladın!");
                     } else {
+                        // Mola Bitiş Bildirimi
+                        sendPWANotification(
+                            "⏰ Mola Süresi Bitti!",
+                            "Mola süresi tamamlandı. Yeni bir Pomodoro başlatarak çalışmaya devam etme vakti!",
+                            `break-complete-${Date.now()}`,
+                            '/pomodoro.html'
+                        );
+
                         alert("Mola süresi bitti! Çalışmaya geri dönme vakti.");
                     }
                 }

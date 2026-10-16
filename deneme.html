@@ -30,22 +30,22 @@
         }
     </script>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <!-- PWA Manifest -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
 
-<!-- Service Worker Kaydı -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('Service Worker Aktif:', reg.scope))
-        .catch((err) => console.log('Service Worker Hatası:', err));
-    });
-  }
-</script>
+    <!-- Service Worker Kaydı -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('Service Worker Aktif:', reg.scope))
+            .catch((err) => console.log('Service Worker Hatası:', err));
+        });
+      }
+    </script>
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -64,37 +64,44 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
 
     <!-- HEADER / NAVIGATION (deneme.html için) -->
-<header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
-                    <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                        <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">AÖO Başarı İstasyonu</h1>
+                        <p class="text-xs text-slate-400 font-medium">Öğrenci: <span class="text-brand-400 font-semibold">Ahmet Ensar</span></p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-lg font-bold bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">AÖO Başarı İstasyonu</h1>
-                    <p class="text-xs text-slate-400 font-medium">Öğrenci: <span class="text-brand-400 font-semibold">Ahmet Ensar</span></p>
+
+                <div class="flex items-center gap-3">
+                    <!-- Bildirim İzin Butonu -->
+                    <button id="notifBtn" onclick="requestNotificationPermission()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all">
+                        <i class="fa-solid fa-bell"></i> <span id="notifBtnText">Bildirimleri Aç</span>
+                    </button>
+
+                    <nav class="hidden md:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800/80">
+                        <a href="takvim.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-regular fa-calendar-check"></i> Takvim</a>
+                        <a href="deneme.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-400 bg-brand-500/10 border border-brand-500/20"><i class="fa-solid fa-chart-line"></i> Deneme</a>
+                        <a href="hata_defteri.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-book-bookmark"></i> Hata Defteri</a>
+                        <a href="pomodoro.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-clock"></i> Pomodoro</a>
+                        <a href="ozet.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-sliders"></i> İstatistik</a>
+                    </nav>
                 </div>
             </div>
-
-            <nav class="hidden md:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800/80">
-                <a href="takvim.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-regular fa-calendar-check"></i> Takvim</a>
-                <a href="deneme.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-400 bg-brand-500/10 border border-brand-500/20"><i class="fa-solid fa-chart-line"></i> Deneme</a>
-                <a href="hata_defteri.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-book-bookmark"></i> Hata Defteri</a>
-                <a href="pomodoro.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-clock"></i> Pomodoro</a>
-                <a href="ozet.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-sliders"></i> İstatistik</a>
-            </nav>
         </div>
-    </div>
 
-    <div class="md:hidden flex border-t border-slate-800/80 bg-slate-900 px-1 py-1.5 justify-around">
-        <a href="takvim.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-regular fa-calendar-check text-sm"></i> Takvim</a>
-        <a href="deneme.html" class="flex flex-col items-center gap-0.5 text-brand-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-line text-sm"></i> Deneme</a>
-        <a href="hata_defteri.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-book-bookmark text-sm"></i> Hata</a>
-        <a href="pomodoro.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-clock text-sm"></i> Pomodoro</a>
-        <a href="ozet.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-pie text-sm"></i> İstatistik</a>
-    </div>
-</header>
+        <div class="md:hidden flex border-t border-slate-800/80 bg-slate-900 px-1 py-1.5 justify-around">
+            <a href="takvim.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-regular fa-calendar-check text-sm"></i> Takvim</a>
+            <a href="deneme.html" class="flex flex-col items-center gap-0.5 text-brand-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-line text-sm"></i> Deneme</a>
+            <a href="hata_defteri.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-book-bookmark text-sm"></i> Hata</a>
+            <a href="pomodoro.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-clock text-sm"></i> Pomodoro</a>
+            <a href="ozet.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-pie text-sm"></i> İstatistik</a>
+        </div>
+    </header>
 
     <!-- MAIN CONTAINER -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
@@ -207,11 +214,71 @@
         let currentActiveExamId = 1;
         let netChartInstance = null;
 
+        // BİLDİRİM FONKSİYONLARI
+        function sendPWANotification(title, body, tag = 'general', url = '/deneme.html') {
+            if (Notification.permission === 'granted') {
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'SHOW_NOTIFICATION',
+                        title: title,
+                        body: body,
+                        tag: tag,
+                        url: url
+                    });
+                } else {
+                    new Notification(title, { body: body, icon: '/android-chrome-192x192.png' });
+                }
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                alert("Tarayıcınız bildirim özelliğini desteklemiyor.");
+                return;
+            }
+
+            Notification.requestPermission().then((permission) => {
+                updateNotifButtonUI();
+                if (permission === "granted") {
+                    sendPWANotification(
+                        "Başarı İstasyonu 🚀",
+                        "Bildirimler aktif edildi! Deneme sonuçlarını kaydettiğinde sana haber vereceğiz.",
+                        "welcome-deneme"
+                    );
+                } else if (permission === "denied") {
+                    alert("Bildirim izni engellendi. Telefon/Tarayıcı ayarlarından izin verebilirsin.");
+                }
+            });
+        }
+
+        function updateNotifButtonUI() {
+            const btnText = document.getElementById("notifBtnText");
+            const btn = document.getElementById("notifBtn");
+            if (!btnText || !btn) return;
+
+            if (!("Notification" in window)) {
+                btnText.innerText = "Desteklenmiyor";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                btnText.innerText = "Bildirimler Açık";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold cursor-default";
+            } else if (Notification.permission === "denied") {
+                btnText.innerText = "Bildirim Kapalı";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-semibold cursor-pointer";
+            } else {
+                btnText.innerText = "Bildirimleri Aç";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all cursor-pointer";
+            }
+        }
+
         window.addEventListener("DOMContentLoaded", () => {
             initExamsStructure();
             renderExamTabs();
             loadExamScoreTable(currentActiveExamId);
             initChart();
+            updateNotifButtonUI();
         });
 
         function initExamsStructure() {
@@ -308,11 +375,49 @@
         }
 
         function saveCurrentExamScores() {
+            // Önceki en yüksek net rekorunu hesapla
+            let previousHighestNet = 0;
+            examsData.forEach(e => {
+                let n = 0;
+                SUBJECTS.forEach(sub => {
+                    const d = e.scores[sub]?.d || 0;
+                    const y = e.scores[sub]?.y || 0;
+                    n += (d - (y / 4));
+                });
+                if (n > previousHighestNet) previousHighestNet = n;
+            });
+
             const ex = examsData.find(item => item.id === currentActiveExamId);
             ex.notes = document.getElementById("examNotesInput").value;
 
             localStorage.setItem("aoo_exams_data", JSON.stringify(examsData));
             updateChart();
+
+            // Güncel denemenin toplam netini hesapla
+            let currentNet = 0;
+            SUBJECTS.forEach(sub => {
+                const d = ex.scores[sub]?.d || 0;
+                const y = ex.scores[sub]?.y || 0;
+                currentNet += (d - (y / 4));
+            });
+
+            // PWA Bildirimi Tetikle
+            if (currentNet > 0 && currentNet > previousHighestNet && previousHighestNet > 0) {
+                sendPWANotification(
+                    "🎉 YENİ REKOR KIRILDI!",
+                    `${ex.name} sonuçların kaydedildi! ${currentNet.toFixed(2)} net ile yeni rekorunu kırdın! Tebrikler Ahmet Ensar! 🔥`,
+                    `record-${ex.id}`,
+                    '/deneme.html'
+                );
+            } else {
+                sendPWANotification(
+                    "Deneme Sonucu Kaydedildi 📊",
+                    `${ex.name} netlerin başarıyla güncellendi. Toplam Net: ${currentNet.toFixed(2)}`,
+                    `save-${ex.id}`,
+                    '/deneme.html'
+                );
+            }
+
             alert("Deneme sonuçları başarıyla kaydedildi!");
         }
 

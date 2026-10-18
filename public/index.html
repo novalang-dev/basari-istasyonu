@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AÖO Başarı İstasyonu | Akademik Takvim</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('Service Worker Aktif:', reg.scope))
+            .catch((err) => console.log('Service Worker Hatası:', err));
+        });
+      }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                        <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">AÖO Başarı İstasyonu</h1>
+                        <p class="text-xs text-slate-400 font-medium">Öğrenci: <span class="text-brand-400 font-semibold">Ahmet Ensar</span></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Buton onClick subscribeToPush olarak değiştirildi -->
+                    <button id="notifBtn" onclick="subscribeToPush()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all">
+                        <i class="fa-solid fa-bell"></i> <span id="notifBtnText">Bildirimleri Aç</span>
+                    </button>
+
+                    <nav class="hidden md:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800/80">
+                        <a href="takvim.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-400 bg-brand-500/10 border border-brand-500/20"><i class="fa-regular fa-calendar-check"></i> Takvim</a>
+                        <a href="deneme.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-chart-line"></i> Deneme</a>
+                        <a href="hata_defteri.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-book-bookmark"></i> Hata Defteri</a>
+                        <a href="pomodoro.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-clock"></i> Pomodoro</a>
+                        <a href="ozet.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-sliders"></i> İstatistik</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden flex border-t border-slate-800/80 bg-slate-900 px-1 py-1.5 justify-around">
+            <a href="takvim.html" class="flex flex-col items-center gap-0.5 text-brand-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-regular fa-calendar-check text-sm"></i> Takvim</a>
+            <a href="deneme.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-line text-sm"></i> Deneme</a>
+            <a href="hata_defteri.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-book-bookmark text-sm"></i> Hata</a>
+            <a href="pomodoro.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-clock text-sm"></i> Pomodoro</a>
+            <a href="ozet.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-pie text-sm"></i> İstatistik</a>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        <div id="countdownBanner" class="bg-gradient-to-r from-brand-900/60 via-slate-900 to-purple-900/40 border border-brand-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+            <div class="flex items-center gap-3">
+                <div id="bannerIconBox" class="w-10 h-10 rounded-xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center shrink-0">
+                    <i id="bannerIcon" class="fa-solid fa-bullhorn text-brand-400 animate-pulse"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-semibold text-slate-200">Sıradaki Önemli Aşama / Uyarı</h2>
+                    <p id="nextEventText" class="text-xs text-brand-300 font-medium">Hesaplanıyor...</p>
+                </div>
+            </div>
+            <div id="countdownTimer" class="flex items-center gap-2 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300 font-bold shrink-0">--:--:--</div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 p-4 rounded-2xl border border-slate-800">
+            <div>
+                <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-regular fa-calendar-alt text-brand-400"></i> Akademik Çalışma & Sınav Takvimi</h2>
+                <p class="text-xs text-slate-400">Ekim 2026 - Temmuz 2027 Resmi MEB ve Deneme Programı</p>
+            </div>
+            <div>
+                <select id="calendarFilter" onchange="renderCalendar()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-brand-500">
+                    <option value="all">Tüm Etkinlikler</option>
+                    <option value="deneme">Sadece Deneme Sınavları</option>
+                    <option value="meb">Resmi AÖO Sınavları</option>
+                    <option value="tatil">Ara Tatiller</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="calendarList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </main>
+
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500">
+        <p>AÖO Çalışma ve Başarı İstasyonu &copy; 2026 - 2027 | Ahmet Ensar</p>
+    </footer>
+
+    <script>
+        const CALENDAR_EVENTS = [
+            { id: "e1", date: "2026-10-19", title: "Düzenli Çalışmaya Başlangıç", type: "genel", icon: "fa-rocket", desc: "Zil ve ders çalışma programına tam uyum" },
+            { id: "e2", date: "2026-11-06", title: "1. Genel Deneme Sınavı", type: "deneme", icon: "fa-pen-to-square", desc: "Genel konu taraması ve net tespiti" },
+            { id: "e3", date: "2026-11-16", title: "Kasım Ara Tatili Başlangıcı", type: "tatil", icon: "fa-mug-hot", desc: "Dinlenme ve hafif tekrarlar" },
+            { id: "e4", date: "2026-11-20", title: "Kasım Ara Tatili Bitişi", type: "tatil", icon: "fa-flag-checkered", desc: "Tatil dönemi sonu" },
+            { id: "e5", date: "2026-11-23", title: "Ders Başlangıcı (Ara Tatil Sonu)", type: "genel", icon: "fa-book-open", desc: "Yoğun çalışma temposuna dönüş" },
+            { id: "e6", date: "2026-12-24", title: "2. Genel Deneme Sınavı", type: "deneme", icon: "fa-pen-to-square", desc: "Sınav öncesi son genel durum testi" },
+            { id: "e7", date: "2027-01-25", title: "15 Tatil Başlangıcı (1. Dönem Sonu)", type: "tatil", icon: "fa-snowflake", desc: "Yarıyıl tatili başlama tarihi" },
+            { id: "e8", date: "2027-01-30", title: "AÖO Kayıt Yenileme İşlemleri", type: "meb", icon: "fa-address-card", desc: "Ocak-Şubat dönemi ders seçimi ve kayıt" },
+            { id: "e9", date: "2027-02-05", title: "15 Tatil Sonu", type: "tatil", icon: "fa-bell", desc: "Yarıyıl tatili bitişi" },
+            { id: "e10", date: "2027-02-08", title: "2. Dönem Ders Başlangıcı", type: "genel", icon: "fa-graduation-cap", desc: "2. Dönem çalışma takvimi startı" },
+            { id: "e11", date: "2027-03-08", title: "Bahar Ara Tatil Başlangıcı", type: "tatil", icon: "fa-umbrella-beach", desc: "Eksik kapatma ve dinlenme haftası" },
+            { id: "e12", date: "2027-03-12", title: "Bahar Ara Tatili Bitişi", type: "tatil", icon: "fa-flag", desc: "Bahar ara tatili sonu" },
+            { id: "e13", date: "2027-04-11", title: "3. Genel Deneme Sınavı", type: "deneme", icon: "fa-pen-to-square", desc: "AÖO 2. Dönem resmi sınav provası" },
+            { id: "e14", date: "2027-04-17", title: "AÖO 2. DÖNEM RESMİ SINAVI", type: "meb", icon: "fa-building-columns", desc: "MEB Resmi 2. Dönem Sınavı (17-18 Nisan)" },
+            { id: "e15", date: "2027-06-08", title: "4. Genel Deneme Sınavı", type: "deneme", icon: "fa-pen-to-square", desc: "3. Dönem yaz sınavı hazırlık testi" },
+            { id: "e16", date: "2027-07-07", title: "5. Genel Deneme Sınavı", type: "deneme", icon: "fa-pen-to-square", desc: "Yaz dönemi son provası" },
+            { id: "e17", date: "2027-07-20", title: "AÖO 3. DÖNEM RESMİ SINAVI", type: "meb", icon: "fa-trophy", desc: "MEB Resmi 3. Dönem Sınavı & Dönem Bitişi" }
+        ];
+
+        let completedCalendarIds = JSON.parse(localStorage.getItem("aoo_completed_cal")) || [];
+
+        // --- PUSH ABONELİĞİ (YENİ NESİL BİLDİRİM SİSTEMİ) ---
+        async function subscribeToPush() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                alert('Tarayıcınız push bildirimlerini desteklemiyor.');
+                return;
+            }
+
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') {
+                alert('Bildirim izni verilmedi.');
+                updateNotifButtonUI();
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.ready;
+                const res = await fetch('/api/vapid-public-key');
+                const { publicKey } = await res.json();
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicKey)
+                });
+
+                await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        endpoint: subscription.endpoint,
+                        keys: subscription.toJSON().keys,
+                        device_label: /Mobi|Android/i.test(navigator.userAgent) ? 'phone' : 'desktop'
+                    })
+                });
+                
+                updateNotifButtonUI();
+                showLocalNotification("Başarı İstasyonu 🚀", "Bildirimler başarıyla aktif edildi!");
+                
+            } catch (err) {
+                console.error('Abonelik hatası:', err);
+                alert('Bildirimlere abone olurken bir hata oluştu.');
+            }
+        }
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = atob(base64);
+            return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+        }
+
+        function updateNotifButtonUI() {
+            const btnText = document.getElementById("notifBtnText");
+            const btn = document.getElementById("notifBtn");
+            if (!btnText || !btn) return;
+
+            if (!("Notification" in window)) {
+                btnText.innerText = "Desteklenmiyor";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                btnText.innerText = "Bildirimler Açık";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold cursor-default";
+            } else if (Notification.permission === "denied") {
+                btnText.innerText = "Bildirim Kapalı";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-semibold cursor-pointer";
+            } else {
+                btnText.innerText = "Bildirimleri Aç";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all cursor-pointer";
+            }
+        }
+
+        function showLocalNotification(title, body) {
+            if (Notification.permission === 'granted' && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'SHOW_NOTIFICATION',
+                    title: title,
+                    body: body,
+                    url: '/index.html'
+                });
+            }
+        }
+
+        // --- TAKVİM VE GERİ SAYIM FONKSİYONLARI ---
+        function checkAutoCompletionAndAlerts() {
+            const now = new Date();
+            let updated = false;
+            CALENDAR_EVENTS.forEach(ev => {
+                const evDate = new Date(ev.date + "T00:00:00");
+                if (now >= evDate && !completedCalendarIds.includes(ev.id)) {
+                    completedCalendarIds.push(ev.id);
+                    updated = true;
+                }
+            });
+            if (updated) localStorage.setItem("aoo_completed_cal", JSON.stringify(completedCalendarIds));
+            updateCountdownAndWarnings();
+        }
+
+        function updateCountdownAndWarnings() {
+            const now = new Date();
+            let closest = null;
+            let minDiff = Infinity;
+            CALENDAR_EVENTS.forEach(ev => {
+                const evDate = new Date(ev.date + "T00:00:00");
+                const diff = evDate - now;
+                if (diff > 0 && diff < minDiff) { minDiff = diff; closest = { ...ev, diff }; }
+            });
+            const banner = document.getElementById("countdownBanner");
+            const textEl = document.getElementById("nextEventText");
+            const timerEl = document.getElementById("countdownTimer");
+            const iconEl = document.getElementById("bannerIcon");
+            if (!closest) { textEl.innerText = "Tüm planlanan etkinlikler tamamlandı!"; timerEl.innerText = "Bitti"; return; }
+
+            const hoursLeft = closest.diff / (1000 * 60 * 60);
+            const daysLeft = Math.floor(hoursLeft / 24);
+            const remHours = Math.floor(hoursLeft % 24);
+            const remMins = Math.floor((closest.diff % (1000 * 60 * 60)) / (1000 * 60));
+            let badgeHtml = "";
+            let bannerClass = "bg-gradient-to-r from-brand-900/60 via-slate-900 to-purple-900/40 border-brand-500/30";
+            let iconColor = "text-brand-400";
+            if (hoursLeft <= 6) {
+                badgeHtml = `<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40 font-bold animate-pulse">🚨 KRİTİK: SON 6 SAAT!</span>`;
+                bannerClass = "bg-gradient-to-r from-rose-950/80 via-slate-900 to-slate-900 border-rose-500/60";
+                iconColor = "text-rose-400";
+            } else if (hoursLeft <= 12) {
+                badgeHtml = `<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold">⚠️ Son 12 Saat Kaldı!</span>`;
+                bannerClass = "bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-900 border-amber-500/50";
+                iconColor = "text-amber-400";
+            } else if (hoursLeft <= 24) {
+                badgeHtml = `<span class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 font-semibold">⏰ Son 1 Gün Kaldı!</span>`;
+                bannerClass = "bg-gradient-to-r from-yellow-950/50 via-slate-900 to-slate-900 border-yellow-500/40";
+                iconColor = "text-yellow-400";
+            }
+            banner.className = `border rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl transition-all duration-300 ${bannerClass}`;
+            iconEl.className = `fa-solid fa-bullhorn ${iconColor} animate-pulse`;
+            textEl.innerHTML = `<span class="text-white font-bold">${closest.title}</span> (${closest.date}) <span class="ml-2">${badgeHtml}</span>`;
+            timerEl.innerText = `${daysLeft > 0 ? daysLeft + ' gün ' : ''}${remHours} sa ${remMins} dk kaldı`;
+        }
+
+        function renderCalendar() {
+            const filter = document.getElementById("calendarFilter").value;
+            const container = document.getElementById("calendarList");
+            container.innerHTML = "";
+            const filtered = CALENDAR_EVENTS.filter(ev => filter === "all" || ev.type === filter);
+            filtered.forEach(ev => {
+                const isChecked = completedCalendarIds.includes(ev.id);
+                const card = document.createElement("div");
+                card.className = `bg-slate-900 border ${isChecked ? 'border-emerald-500/40 opacity-75' : 'border-slate-800'} rounded-2xl p-4 flex flex-col justify-between gap-3 transition-all duration-200`;
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl ${isChecked ? 'bg-emerald-500/20 text-emerald-400' : 'bg-brand-500/10 text-brand-400'} border border-slate-800 flex items-center justify-center shrink-0">
+                                <i class="fa-solid ${ev.icon}"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-semibold text-brand-400">${ev.date}</span>
+                                <h3 class="text-xs font-bold text-white ${isChecked ? 'line-through text-slate-400' : ''}">${ev.title}</h3>
+                            </div>
+                        </div>
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleCalendar('${ev.id}')" class="w-4 h-4 accent-brand-500 rounded cursor-pointer mt-1">
+                    </div>
+                    <p class="text-[11px] text-slate-400 pl-12">${ev.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleCalendar(id) {
+            completedCalendarIds = completedCalendarIds.includes(id) ? completedCalendarIds.filter(item => item !== id) : [...completedCalendarIds, id];
+            localStorage.setItem("aoo_completed_cal", JSON.stringify(completedCalendarIds));
+            renderCalendar();
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            updateNotifButtonUI();
+            checkAutoCompletionAndAlerts();
+            renderCalendar();
+            setInterval(checkAutoCompletionAndAlerts, 30000);
+        });
+    </script>
+</body>
+</html>

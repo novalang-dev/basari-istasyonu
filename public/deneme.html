@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AÖO Başarı İstasyonu | Deneme Netleri</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('Service Worker Aktif:', reg.scope))
+            .catch((err) => console.log('Service Worker Hatası:', err));
+        });
+      }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                        <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">AÖO Başarı İstasyonu</h1>
+                        <p class="text-xs text-slate-400 font-medium">Öğrenci: <span class="text-brand-400 font-semibold">Ahmet Ensar</span></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Bildirim İzin Butonu (Push Abonelik) -->
+                    <button id="notifBtn" onclick="subscribeToPush()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all">
+                        <i class="fa-solid fa-bell"></i> <span id="notifBtnText">Bildirimleri Aç</span>
+                    </button>
+
+                    <nav class="hidden md:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-xl border border-slate-800/80">
+                        <a href="takvim.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-regular fa-calendar-check"></i> Takvim</a>
+                        <a href="deneme.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-400 bg-brand-500/10 border border-brand-500/20"><i class="fa-solid fa-chart-line"></i> Deneme</a>
+                        <a href="hata_defteri.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-book-bookmark"></i> Hata Defteri</a>
+                        <a href="pomodoro.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-clock"></i> Pomodoro</a>
+                        <a href="ozet.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"><i class="fa-solid fa-sliders"></i> İstatistik</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden flex border-t border-slate-800/80 bg-slate-900 px-1 py-1.5 justify-around">
+            <a href="takvim.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-regular fa-calendar-check text-sm"></i> Takvim</a>
+            <a href="deneme.html" class="flex flex-col items-center gap-0.5 text-brand-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-line text-sm"></i> Deneme</a>
+            <a href="hata_defteri.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-book-bookmark text-sm"></i> Hata</a>
+            <a href="pomodoro.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-clock text-sm"></i> Pomodoro</a>
+            <a href="ozet.html" class="flex flex-col items-center gap-0.5 text-slate-400 text-[10px] font-medium py-1 px-2 rounded-lg"><i class="fa-solid fa-chart-pie text-sm"></i> İstatistik</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- Header & Exam Selector -->
+        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-cyan-400"></i> Deneme Sınavları Net Takip
+                </h2>
+                <p class="text-xs text-slate-400">5 Genel denemenin ders bazında doğru, yanlış ve net analizi</p>
+            </div>
+
+            <!-- Exam Selector Buttons -->
+            <div id="examButtons" class="flex flex-wrap gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+                <!-- JS ile doldurulacak -->
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left 2 Cols: Form Input for Selected Exam -->
+            <div class="lg:col-span-2 bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span id="activeExamBadge" class="bg-brand-500/20 text-brand-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-brand-500/30">1. Genel Deneme</span>
+                        <span id="activeExamDate" class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>06 Kasım 2026</span>
+                    </div>
+                    <button onclick="saveCurrentExamScores()" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition shadow-lg shadow-brand-600/20 flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Kaydet
+                    </button>
+                </div>
+
+                <!-- Subject Scores Inputs Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-slate-800">
+                                <th class="py-2.5 font-semibold">Ders Adı</th>
+                                <th class="py-2.5 font-semibold w-24 text-center">Doğru (D)</th>
+                                <th class="py-2.5 font-semibold w-24 text-center">Yanlış (Y)</th>
+                                <th class="py-2.5 font-semibold w-28 text-center">Net</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectScoreRows" class="divide-y divide-slate-800/60">
+                            <!-- JS ile doldurulacak -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-slate-950/60 font-bold text-white border-t border-slate-800">
+                                <td class="py-3 px-2">TOPLAM</td>
+                                <td id="totalCorrect" class="text-center text-emerald-400">0</td>
+                                <td id="totalWrong" class="text-center text-rose-400">0</td>
+                                <td id="totalNet" class="text-center text-cyan-300 text-sm font-black">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Notes / Analysis -->
+                <div class="space-y-1.5 pt-2">
+                    <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                        <i class="fa-regular fa-comment-dots text-brand-400"></i> Deneme Değerlendirme & Hata Notları
+                    </label>
+                    <textarea id="examNotesInput" rows="3" placeholder="Bu denemede hangi konularda zorlandın? Yapılan dikkat hataları neler?"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition"></textarea>
+                </div>
+            </div>
+
+            <!-- Right Col: Net Progression Chart -->
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-1">5 Deneme Net Gelişimi</h3>
+                    <p class="text-[11px] text-slate-400 mb-4">Sınavlar arasındaki toplam net grafiği</p>
+                    <div class="relative w-full h-56">
+                        <canvas id="netProgressChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 text-xs space-y-1.5">
+                    <div class="flex justify-between text-slate-400">
+                        <span>En Yüksek Net:</span>
+                        <span id="highestNetLabel" class="font-bold text-emerald-400">0.00</span>
+                    </div>
+                    <div class="flex justify-between text-slate-400">
+                        <span>Ortalama Net:</span>
+                        <span id="avgNetLabel" class="font-bold text-cyan-300">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500">
+        <p>AÖO Çalışma ve Başarı İstasyonu &copy; 2026 - 2027 | Ahmet Ensar</p>
+    </footer>
+
+    <script>
+        const SUBJECTS = ["Türkçe", "Matematik", "Fen Bilimleri", "Sosyal Bilgiler", "İngilizce", "Din Kültürü"];
+        
+        const DEFAULT_EXAMS = [
+            { id: 1, name: "1. Genel Deneme", date: "06 Kasım 2026", scores: {}, notes: "" },
+            { id: 2, name: "2. Genel Deneme", date: "24 Aralık 2026", scores: {}, notes: "" },
+            { id: 3, name: "3. Genel Deneme", date: "11 Nisan 2027", scores: {}, notes: "" },
+            { id: 4, name: "4. Genel Deneme", date: "08 Haziran 2027", scores: {}, notes: "" },
+            { id: 5, name: "5. Genel Deneme", date: "07 Temmuz 2027", scores: {}, notes: "" }
+        ];
+
+        let examsData = JSON.parse(localStorage.getItem("aoo_exams_data")) || DEFAULT_EXAMS;
+        let currentActiveExamId = 1;
+        let netChartInstance = null;
+
+        // --- PUSH ABONELİĞİ KODLARI ---
+        async function subscribeToPush() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                alert('Tarayıcınız push bildirimlerini desteklemiyor.');
+                return;
+            }
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') {
+                alert('Bildirim izni verilmedi.');
+                updateNotifButtonUI();
+                return;
+            }
+            try {
+                const registration = await navigator.serviceWorker.ready;
+                const res = await fetch('/api/vapid-public-key');
+                const { publicKey } = await res.json();
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicKey)
+                });
+                await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        endpoint: subscription.endpoint,
+                        keys: subscription.toJSON().keys,
+                        device_label: /Mobi|Android/i.test(navigator.userAgent) ? 'phone' : 'desktop'
+                    })
+                });
+                updateNotifButtonUI();
+                sendPWANotification("Başarı İstasyonu 🚀", "Bildirimler aktif edildi! Deneme sonuçlarını kaydettiğinde sana haber vereceğiz.", "welcome-deneme");
+            } catch (err) {
+                console.error('Abonelik hatası:', err);
+                alert('Bildirimlere abone olurken bir hata oluştu.');
+            }
+        }
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = atob(base64);
+            return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+        }
+
+        // --- SAYFA İÇİ ANLIK BİLDİRİM FONKSİYONU ---
+        function sendPWANotification(title, body, tag = 'general', url = '/deneme.html') {
+            if (Notification.permission === 'granted') {
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'SHOW_NOTIFICATION',
+                        title: title,
+                        body: body,
+                        tag: tag,
+                        url: url
+                    });
+                } else {
+                    new Notification(title, { body: body, icon: '/android-chrome-192x192.png' });
+                }
+            }
+        }
+
+        function updateNotifButtonUI() {
+            const btnText = document.getElementById("notifBtnText");
+            const btn = document.getElementById("notifBtn");
+            if (!btnText || !btn) return;
+
+            if (!("Notification" in window)) {
+                btnText.innerText = "Desteklenmiyor";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                btnText.innerText = "Bildirimler Açık";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold cursor-default";
+            } else if (Notification.permission === "denied") {
+                btnText.innerText = "Bildirim Kapalı";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-semibold cursor-pointer";
+            } else {
+                btnText.innerText = "Bildirimleri Aç";
+                btn.className = "flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-brand-400 border border-brand-500/30 transition-all cursor-pointer";
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            initExamsStructure();
+            renderExamTabs();
+            loadExamScoreTable(currentActiveExamId);
+            initChart();
+            updateNotifButtonUI();
+        });
+
+        function initExamsStructure() {
+            examsData.forEach(ex => {
+                SUBJECTS.forEach(sub => {
+                    if (!ex.scores[sub]) {
+                        ex.scores[sub] = { d: 0, y: 0 };
+                    }
+                });
+            });
+        }
+
+        function renderExamTabs() {
+            const container = document.getElementById("examButtons");
+            container.innerHTML = "";
+
+            examsData.forEach(ex => {
+                const isActive = ex.id === currentActiveExamId;
+                const btn = document.createElement("button");
+                btn.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition ${isActive ? 'bg-brand-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'}`;
+                btn.innerText = `${ex.id}. Deneme`;
+                btn.onclick = () => {
+                    currentActiveExamId = ex.id;
+                    renderExamTabs();
+                    loadExamScoreTable(ex.id);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function loadExamScoreTable(examId) {
+            const ex = examsData.find(item => item.id === examId);
+            document.getElementById("activeExamBadge").innerText = ex.name;
+            document.getElementById("activeExamDate").innerHTML = `<i class="fa-regular fa-clock mr-1"></i>${ex.date}`;
+            document.getElementById("examNotesInput").value = ex.notes || "";
+
+            const tbody = document.getElementById("subjectScoreRows");
+            tbody.innerHTML = "";
+
+            SUBJECTS.forEach(sub => {
+                const data = ex.scores[sub] || { d: 0, y: 0 };
+                const net = (data.d - (data.y / 4)).toFixed(2);
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="py-3 px-2 font-medium text-slate-200">${sub}</td>
+                    <td class="py-2 px-2 text-center">
+                        <input type="number" min="0" max="50" value="${data.d}" oninput="updateScoreCalc(${examId}, '${sub}', this, 'd')" 
+                            class="w-16 bg-slate-950 border border-slate-800 rounded-lg text-center py-1 text-xs text-slate-200 focus:outline-none focus:border-brand-500">
+                    </td>
+                    <td class="py-2 px-2 text-center">
+                        <input type="number" min="0" max="50" value="${data.y}" oninput="updateScoreCalc(${examId}, '${sub}', this, 'y')" 
+                            class="w-16 bg-slate-950 border border-slate-800 rounded-lg text-center py-1 text-xs text-slate-200 focus:outline-none focus:border-brand-500">
+                    </td>
+                    <td id="net-${examId}-${sub}" class="py-3 px-2 text-center font-bold text-cyan-400">${net}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            calculateTotals(ex);
+        }
+
+        function updateScoreCalc(examId, subject, inputElem, type) {
+            const val = parseInt(inputElem.value) || 0;
+            const ex = examsData.find(item => item.id === examId);
+            if (!ex.scores[subject]) ex.scores[subject] = { d: 0, y: 0 };
+            
+            ex.scores[subject][type] = val;
+
+            const d = ex.scores[subject].d;
+            const y = ex.scores[subject].y;
+            const net = (d - (y / 4)).toFixed(2);
+
+            document.getElementById(`net-${examId}-${subject}`).innerText = net;
+            calculateTotals(ex);
+        }
+
+        function calculateTotals(ex) {
+            let totD = 0;
+            let totY = 0;
+            let totNet = 0;
+
+            SUBJECTS.forEach(sub => {
+                const d = ex.scores[sub]?.d || 0;
+                const y = ex.scores[sub]?.y || 0;
+                totD += d;
+                totY += y;
+                totNet += (d - (y / 4));
+            });
+
+            document.getElementById("totalCorrect").innerText = totD;
+            document.getElementById("totalWrong").innerText = totY;
+            document.getElementById("totalNet").innerText = totNet.toFixed(2);
+        }
+
+        function saveCurrentExamScores() {
+            let previousHighestNet = 0;
+            examsData.forEach(e => {
+                let n = 0;
+                SUBJECTS.forEach(sub => {
+                    const d = e.scores[sub]?.d || 0;
+                    const y = e.scores[sub]?.y || 0;
+                    n += (d - (y / 4));
+                });
+                if (n > previousHighestNet) previousHighestNet = n;
+            });
+
+            const ex = examsData.find(item => item.id === currentActiveExamId);
+            ex.notes = document.getElementById("examNotesInput").value;
+
+            localStorage.setItem("aoo_exams_data", JSON.stringify(examsData));
+            updateChart();
+
+            let currentNet = 0;
+            SUBJECTS.forEach(sub => {
+                const d = ex.scores[sub]?.d || 0;
+                const y = ex.scores[sub]?.y || 0;
+                currentNet += (d - (y / 4));
+            });
+
+            if (currentNet > 0 && currentNet > previousHighestNet && previousHighestNet > 0) {
+                sendPWANotification(
+                    "🎉 YENİ REKOR KIRILDI!",
+                    `${ex.name} sonuçların kaydedildi! ${currentNet.toFixed(2)} net ile yeni rekorunu kırdın! Tebrikler Ahmet Ensar! 🔥`,
+                    `record-${ex.id}`,
+                    '/deneme.html'
+                );
+            } else {
+                sendPWANotification(
+                    "Deneme Sonucu Kaydedildi 📊",
+                    `${ex.name} netlerin başarıyla güncellendi. Toplam Net: ${currentNet.toFixed(2)}`,
+                    `save-${ex.id}`,
+                    '/deneme.html'
+                );
+            }
+
+            alert("Deneme sonuçları başarıyla kaydedildi!");
+        }
+
+        function initChart() {
+            const ctx = document.getElementById("netProgressChart").getContext("2d");
+            
+            const labels = examsData.map(e => `${e.id}. Deneme`);
+            const netData = examsData.map(e => {
+                let n = 0;
+                SUBJECTS.forEach(sub => {
+                    const d = e.scores[sub]?.d || 0;
+                    const y = e.scores[sub]?.y || 0;
+                    n += (d - (y / 4));
+                });
+                return parseFloat(n.toFixed(2));
+            });
+
+            netChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Toplam Net',
+                        data: netData,
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: '#0ea5e9'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: '#1e293b' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+
+            updateChartStats(netData);
+        }
+
+        function updateChart() {
+            if (!netChartInstance) return;
+            
+            const netData = examsData.map(e => {
+                let n = 0;
+                SUBJECTS.forEach(sub => {
+                    const d = e.scores[sub]?.d || 0;
+                    const y = e.scores[sub]?.y || 0;
+                    n += (d - (y / 4));
+                });
+                return parseFloat(n.toFixed(2));
+            });
+
+            netChartInstance.data.datasets[0].data = netData;
+            netChartInstance.update();
+
+            updateChartStats(netData);
+        }
+
+        function updateChartStats(netData) {
+            const maxNet = Math.max(...netData, 0);
+            const validNets = netData.filter(n => n > 0);
+            const avgNet = validNets.length > 0 ? (validNets.reduce((a, b) => a + b, 0) / validNets.length).toFixed(2) : "0.00";
+
+            document.getElementById("highestNetLabel").innerText = maxNet.toFixed(2);
+            document.getElementById("avgNetLabel").innerText = avgNet;
+        }
+    </script>
+</body>
+</html>

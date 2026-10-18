@@ -1,4 +1,4 @@
-const CACHE_NAME = 'basari-istasyonu-v1.1';
+const CACHE_NAME = 'basari-istasyonu-v1.2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -34,7 +34,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// 4. Sayfadan gelen bildirim isteklerini dinleme
+// 4. Sayfadan gelen yerel bildirim isteklerini dinleme
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
     const title = event.data.title || 'Başarı İstasyonu';
@@ -42,7 +42,7 @@ self.addEventListener('message', (event) => {
       body: event.data.body || 'Sıradaki etkinliği kaçırma!',
       icon: event.data.icon || '/android-chrome-192x192.png',
       badge: event.data.badge || '/favicon-32x32.png',
-      vibrate: [200, 100, 200], // Telefon titreşim efekti
+      vibrate: [200, 100, 200],
       tag: event.data.tag || 'basari-istasyonu-notification',
       renotify: true,
       data: {
@@ -56,19 +56,17 @@ self.addEventListener('message', (event) => {
 
 // 5. Bildirime tıklandığında uygulamayı açma veya odaklanma
 self.addEventListener('notificationclick', (event) => {
-  event.notification.close(); // Bildirimi kapat
+  event.notification.close();
 
   const targetUrl = event.notification.data && event.notification.data.url ? event.notification.data.url : '/';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-      // Eğer uygulama zaten açıksa o sekmeye odaklan
       for (let client of windowClients) {
         if (client.url.includes(targetUrl) && 'focus' in client) {
           return client.focus();
         }
       }
-      // Açık sekme yoksa yeni pencerede aç
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
@@ -76,9 +74,9 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// 6. Arka plan/Push bildirimleri dinleyici (Gelecek entegrasyonlar için hazır)
+// 6. Arka plan/Push bildirimleri dinleyici (Sunucudan gelenler)
 self.addEventListener('push', (event) => {
-  let data = { title: 'Başarı İstasyonu', body: 'Yeni bir hatırlatma var!' };
+  let data = { title: 'Başarı İstasyonu', body: 'Yeni bir hatırlatma var!', url: '/' };
   if (event.data) {
     try {
       data = event.data.json();
